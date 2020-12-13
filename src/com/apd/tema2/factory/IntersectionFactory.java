@@ -15,6 +15,27 @@ public class IntersectionFactory {
     static {
         // cache.put("name_intersection", new Intersection() {
         // });
+
+        cache.put("simple_semaphore", new SimpleIntersection() {
+        });
+        cache.put("simple_n_roundabout", new SimpleRoundabout() {
+        });
+        cache.put("simple_strict_1_car_roundabout", new SimpleIntersection() {
+        });
+        cache.put("simple_strict_x_car_roundabout", new SimpleIntersection() {
+        });
+        cache.put("simple_max_x_car_roundabout", new SimpleIntersection() {
+        });
+        cache.put("priority_intersection", new SimpleIntersection() {
+        });
+        cache.put("crosswalk", new SimpleIntersection() {
+        });
+        cache.put("simple_maintenance", new SimpleIntersection() {
+        });
+        cache.put("complex_maintenance", new SimpleIntersection() {
+        });
+        cache.put("railroad", new SimpleIntersection() {
+        });
     }
 
     public static Intersection getIntersection(String handlerType) {

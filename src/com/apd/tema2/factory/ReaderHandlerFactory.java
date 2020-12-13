@@ -32,6 +32,8 @@ public class ReaderHandlerFactory {
                 public void handle(final String handlerType, final BufferedReader br) {
                     // Exemplu de utilizare:
                     // Main.intersection = IntersectionFactory.getIntersection("simpleIntersection");
+                    Main.intersection = IntersectionFactory.getIntersection("simple_semaphore");
+
                 }
             };
             case "simple_n_roundabout" -> new ReaderHandler() {
@@ -39,17 +41,24 @@ public class ReaderHandlerFactory {
                 public void handle(final String handlerType, final BufferedReader br) throws IOException {
                     // To parse input line use:
                     // String[] line = br.readLine().split(" ");
+                    String[] line = br.readLine().split(" ");
+
+                    Main.intersection = IntersectionFactory.getIntersection("simple_n_roundabout");
+                    Main.intersection.setMaxCars(Integer.parseInt(line[0]));
+                    Main.intersection.setTime(Integer.parseInt(line[1]));
                 }
             };
             case "simple_strict_1_car_roundabout" -> new ReaderHandler() {
                 @Override
                 public void handle(final String handlerType, final BufferedReader br) throws IOException {
-
+                    Main.intersection = IntersectionFactory.getIntersection("simple_strict_1_car_roundabout");
+                  
                 }
             };
             case "simple_strict_x_car_roundabout" -> new ReaderHandler() {
                 @Override
                 public void handle(final String handlerType, final BufferedReader br) throws IOException {
+                    Main.intersection = IntersectionFactory.getIntersection("simple_strict_x_car_roundabout");
 
                 }
             };
