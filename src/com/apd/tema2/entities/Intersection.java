@@ -5,14 +5,10 @@ package com.apd.tema2.entities;
  * Implementarile acesteia vor contine variabile specifice task-ului, respectiv mecanisme de sincronizare.
  */
 public interface Intersection {
-    String name = null;
-    Integer maxCars = null;
-    Integer time = null;
 
     void setTime(Integer time);
     void setMaxCars(Integer maxCars);
-
-
-
+    Integer getMaxCars();
+    Integer getTime();
 
 }

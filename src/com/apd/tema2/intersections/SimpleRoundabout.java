@@ -15,4 +15,14 @@ public class SimpleRoundabout implements Intersection {
     public void setTime(Integer time) {
         this.time = time;
     }
+
+    @Override
+    public Integer getMaxCars() {
+        return maxCars;
+    }
+
+    @Override
+    public Integer getTime() {
+        return time;
+    }
 }

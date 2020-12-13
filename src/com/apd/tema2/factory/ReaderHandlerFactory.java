@@ -33,7 +33,6 @@ public class ReaderHandlerFactory {
                     // Exemplu de utilizare:
                     // Main.intersection = IntersectionFactory.getIntersection("simpleIntersection");
                     Main.intersection = IntersectionFactory.getIntersection("simple_semaphore");
-
                 }
             };
             case "simple_n_roundabout" -> new ReaderHandler() {
@@ -71,7 +70,7 @@ public class ReaderHandlerFactory {
             case "priority_intersection" -> new ReaderHandler() {
                 @Override
                 public void handle(final String handlerType, final BufferedReader br) throws IOException {
-                    
+
                 }
             };
             case "crosswalk" -> new ReaderHandler() {

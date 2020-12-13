@@ -14,4 +14,14 @@ public class SimpleIntersection implements Intersection {
     public void setMaxCars(Integer maxCars) {
 
     }
+
+    @Override
+    public Integer getMaxCars() {
+        return null;
+    }
+
+    @Override
+    public Integer getTime() {
+        return null;
+    }
 }
