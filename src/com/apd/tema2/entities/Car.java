@@ -25,8 +25,6 @@ public class Car implements Runnable {
     private final IntersectionHandler intersectionHandler;
 
     public static List<Integer> differentIds;// = Main.differentIds;
-    AtomicInteger carsInIntersection = new AtomicInteger(0);
-
 
     public Car(final int id, final int startDirection, final IntersectionHandler intersectionHandler) {
         this(id, startDirection, -1, 0, intersectionHandler, 1);
@@ -162,7 +160,7 @@ public class Car implements Runnable {
 
                 synchronized (Main.differentIds) {
                     Main.differentIds.set(this.startDirection, 0);
-                    Main.differentIds.notify();
+                    Main.differentIds.notifyAll();
                 }
 
                 break;
@@ -198,25 +196,27 @@ public class Car implements Runnable {
                 break;
 
             case("priority_intersection"):
-                // verific daca este vreo masina cu prioritate mai mare in intersectie
-
                 // if the car has high priority, increment contor(the car is in intersection) and traverse
                 if (this.priority > 1) {
+                    Main.carsInIntersection.incrementAndGet();
                     System.out.println("Car " + this.id + " with high priority has entered the intersection");
-                    carsInIntersection.incrementAndGet();
-                    this.sleep();
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     System.out.println("Car " + this.id + " with high priority has exited the intersection");
-                    carsInIntersection.decrementAndGet();
+                    Main.carsInIntersection.decrementAndGet();
                 }
 
                 // if the car has low priority, try to enter the intersection
                 // if there is no priority car, traverse the intersection
-                if (this.priority == 1) {
+                 else if (this.priority == 1) {
                     System.out.println("Car " + this.id + " with low priority is trying to enter the intersection...");
                     while (true) {
-                        if (carsInIntersection.get() == 0) {
+                        if (Main.carsInIntersection.get() == 0) {
                             System.out.println("Car " + this.id + " with low priority has entered the intersection");
-                            System.out.println("Car " + this.id + " with low priority has exited the intersection");
+                            //System.out.println("Car " + this.id + " with low priority has exited the intersection");
                             break;
                         }
                     }

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Main {
     public static Pedestrians pedestrians = null;
@@ -21,6 +22,8 @@ public class Main {
 
     public static List<Integer> differentIds;
     public static List<Semaphore> semaphores;
+    public static AtomicInteger carsInIntersection = new AtomicInteger(0);
+
     public static void main(String[] args) {
         Reader fileReader = Reader.getInstance(args[0]);
         Set<Thread> cars = fileReader.getCarsFromInput();
