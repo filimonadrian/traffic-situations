@@ -1,9 +1,13 @@
 package com.apd.tema2;
 
+import com.apd.tema2.entities.Car;
 import com.apd.tema2.entities.Intersection;
 import com.apd.tema2.entities.Pedestrians;
 import com.apd.tema2.io.Reader;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.Semaphore;
@@ -15,14 +19,20 @@ public class Main {
     public static CyclicBarrier barrier;
     public static Semaphore semaphore;
 
+    public static List<Integer> differentIds;
+
     public static void main(String[] args) {
         Reader fileReader = Reader.getInstance(args[0]);
         Set<Thread> cars = fileReader.getCarsFromInput();
 
         // barrier = new CyclicBarrier(intersection.getMaxCars());
         if (intersection.getMaxCars() != null) {
+            differentIds = new ArrayList<Integer>(Collections.nCopies(intersection.getMaxCars(), 0));
+            Car.differentIds = new ArrayList<Integer>(Collections.nCopies(intersection.getMaxCars(), 0));
             semaphore = new Semaphore(intersection.getMaxCars());
+
         }
+
         for(Thread car : cars) {
             car.start();
         }

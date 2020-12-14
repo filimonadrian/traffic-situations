@@ -33,6 +33,7 @@ public class ReaderHandlerFactory {
                     // Exemplu de utilizare:
                     // Main.intersection = IntersectionFactory.getIntersection("simpleIntersection");
                     Main.intersection = IntersectionFactory.getIntersection("simple_semaphore");
+                    Main.intersection.setName("simple_semaphore");
                 }
             };
             case "simple_n_roundabout" -> new ReaderHandler() {
@@ -43,6 +44,8 @@ public class ReaderHandlerFactory {
                     String[] line = br.readLine().split(" ");
 
                     Main.intersection = IntersectionFactory.getIntersection("simple_n_roundabout");
+                    Main.intersection.setName("simple_n_roundabout");
+
                     Main.intersection.setMaxCars(Integer.parseInt(line[0]));
                     Main.intersection.setTime(Integer.parseInt(line[1]));
                 }
@@ -50,51 +53,88 @@ public class ReaderHandlerFactory {
             case "simple_strict_1_car_roundabout" -> new ReaderHandler() {
                 @Override
                 public void handle(final String handlerType, final BufferedReader br) throws IOException {
+                    String[] line = br.readLine().split(" ");
+
                     Main.intersection = IntersectionFactory.getIntersection("simple_strict_1_car_roundabout");
-                  
+                    Main.intersection.setName("simple_strict_1_car_roundabout");
+
+                    Main.intersection.setMaxCars(Integer.parseInt(line[0]));
+                    Main.intersection.setTime(Integer.parseInt(line[1]));
                 }
             };
             case "simple_strict_x_car_roundabout" -> new ReaderHandler() {
                 @Override
                 public void handle(final String handlerType, final BufferedReader br) throws IOException {
-                    Main.intersection = IntersectionFactory.getIntersection("simple_strict_x_car_roundabout");
+                    String[] line = br.readLine().split(" ");
 
+                    Main.intersection = IntersectionFactory.getIntersection("simple_strict_x_car_roundabout");
+                    Main.intersection.setName("simple_strict_x_car_roundabout");
+
+                    Main.intersection.setMaxCars(Integer.parseInt(line[0]));
+                    Main.intersection.setTime(Integer.parseInt(line[1]));
+                    Main.intersection.setMaxCarsLane(Integer.parseInt(line[2]));
                 }
             };
             case "simple_max_x_car_roundabout" -> new ReaderHandler() {
                 @Override
                 public void handle(final String handlerType, final BufferedReader br) throws IOException {
-                    
+                    String[] line = br.readLine().split(" ");
+
+                    Main.intersection = IntersectionFactory.getIntersection("simple_max_x_car_roundabout");
+                    Main.intersection.setName("simple_max_x_car_roundabout");
+
+                    Main.intersection.setMaxCars(Integer.parseInt(line[0]));
+                    Main.intersection.setTime(Integer.parseInt(line[1]));
                 }
             };
             case "priority_intersection" -> new ReaderHandler() {
                 @Override
                 public void handle(final String handlerType, final BufferedReader br) throws IOException {
+                    String[] line = br.readLine().split(" ");
 
+                    Main.intersection = IntersectionFactory.getIntersection("priority_intersection");                    Main.intersection.setName("simple_maintenance");
+                    Main.intersection.setName("priority_intersection");
+
+                    Main.intersection.setHighPriorityCarsNo(Integer.parseInt(line[0]));
+                    Main.intersection.setLowPriorityCarsNo(Integer.parseInt(line[1]));
                 }
             };
             case "crosswalk" -> new ReaderHandler() {
                 @Override
                 public void handle(final String handlerType, final BufferedReader br) throws IOException {
-                    
+                    String[] line = br.readLine().split(" ");
+
+                    Main.intersection = IntersectionFactory.getIntersection("crosswalk");
+                    Main.intersection.setName("crosswalk");
+                    Main.intersection.setPedestrianTime(Integer.parseInt(line[0]));
+                    Main.intersection.setMaxPedestriansNo(Integer.parseInt(line[1]));
                 }
             };
             case "simple_maintenance" -> new ReaderHandler() {
                 @Override
                 public void handle(final String handlerType, final BufferedReader br) throws IOException {
-                    
+                    String[] line = br.readLine().split(" ");
+
+                    Main.intersection = IntersectionFactory.getIntersection("simple_maintenance");
+                    Main.intersection.setName("simple_maintenance");
+                    Main.intersection.setCarsPassNo(Integer.parseInt(line[0]));
                 }
             };
             case "complex_maintenance" -> new ReaderHandler() {
                 @Override
                 public void handle(final String handlerType, final BufferedReader br) throws IOException {
-                    
+                    Main.intersection = IntersectionFactory.getIntersection("complex_maintenance");
+                    Main.intersection.setName("complex_maintenance");
+
+
                 }
             };
             case "railroad" -> new ReaderHandler() {
                 @Override
                 public void handle(final String handlerType, final BufferedReader br) throws IOException {
-                    
+                    Main.intersection = IntersectionFactory.getIntersection("railroad");
+                    Main.intersection.setName("railroad");
+
                 }
             };
             default -> null;

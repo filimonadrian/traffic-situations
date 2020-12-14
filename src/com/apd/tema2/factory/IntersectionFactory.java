@@ -20,21 +20,21 @@ public class IntersectionFactory {
         });
         cache.put("simple_n_roundabout", new SimpleRoundabout() {
         });
-        cache.put("simple_strict_1_car_roundabout", new SimpleIntersection() {
+        cache.put("simple_strict_1_car_roundabout", new SimpleStrictOneRoundabout() {
         });
-        cache.put("simple_strict_x_car_roundabout", new SimpleIntersection() {
+        cache.put("simple_strict_x_car_roundabout", new SimpleStrictXRoundabout() {
         });
-        cache.put("simple_max_x_car_roundabout", new SimpleIntersection() {
+        cache.put("simple_max_x_car_roundabout", new SimpleMaxXRoundabout() {
         });
-        cache.put("priority_intersection", new SimpleIntersection() {
+        cache.put("priority_intersection", new PriorityIntersection() {
         });
-        cache.put("crosswalk", new SimpleIntersection() {
+        cache.put("crosswalk", new Crosswalk() {
         });
-        cache.put("simple_maintenance", new SimpleIntersection() {
+        cache.put("simple_maintenance", new SimpleMaintenance() {
         });
-        cache.put("complex_maintenance", new SimpleIntersection() {
+        cache.put("complex_maintenance", new ComplexMaintenance() {
         });
-        cache.put("railroad", new SimpleIntersection() {
+        cache.put("railroad", new Railroad() {
         });
     }
 
