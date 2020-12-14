@@ -169,6 +169,21 @@ public class Car implements Runnable {
 
             case("simple_max_x_car_roundabout"):  // not sure what to do! - also check the ReaderHandler!
                 System.out.println("Car " + this.id + " has reached the roundabout from lane " + this.getStartDirection());
+                synchronized (Main.differentIds) {
+                    while(true) {
+                        if (Main.differentIds.get(this.startDirection) == Main.intersection.getMaxCars()) {
+                            try {
+                                Main.differentIds.wait();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            // if it's the first car in this direction, set flag and GOO
+                            Main.differentIds.set(this.startDirection, 1);
+                            break;
+                        }
+                    }
+                }
 
                 System.out.println("Car " + this.id + " has entered the roundabout from lane " + this.startDirection);
 
@@ -176,6 +191,10 @@ public class Car implements Runnable {
                 System.out.println("Car " + id +
                         " has exited the roundabout after " +
                         Main.intersection.getTime()/1000  + " seconds");
+                synchronized (Main.differentIds) {
+                    Main.differentIds.set(this.startDirection, Main.differentIds.get(this.startDirection) - 1);
+                    Main.differentIds.notifyAll();
+                }
                 break;
 
             case("priority_intersection"):

@@ -32,7 +32,10 @@ public class Main {
         if (intersection.getLanesNo() != null) {
             differentIds = new ArrayList<Integer>(Collections.nCopies(intersection.getLanesNo(), 0));
             barrier = new CyclicBarrier(intersection.getMaxCars() * intersection.getLanesNo());
-            semaphores = new ArrayList<Semaphore>()
+            semaphores = new ArrayList<Semaphore>();
+            for (int i = 0; i < intersection.getMaxCars(); i++) {
+                semaphores.add(new Semaphore(intersection.getMaxCars()));
+            }
         }
 
         for(Thread car : cars) {
