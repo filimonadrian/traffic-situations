@@ -104,16 +104,6 @@ public class Car implements Runnable {
                     }
                 }
 
-//                while(true) {
-//                    if (Main.differentIds.get(this.startDirection) == 1) {
-//                        continue;
-//                    } else {
-//                        // if it's the first car in this direction, set flag and GOO
-//                        Main.differentIds.set(this.startDirection, 1);
-//                        break;
-//                    }
-//                }
-
                 System.out.println("Car " + this.id + " has entered the roundabout from lane " + this.startDirection);
 
                 this.sleep();
@@ -129,13 +119,20 @@ public class Car implements Runnable {
 
             case("simple_strict_x_car_roundabout"):
                 System.out.println("Car " + this.id + " has reached the roundabout");
-                while(true) {
-                    if (Main.differentIds.get(this.startDirection) == (Main.intersection.getMaxCarsLane())) {
-                        continue;
-                    } else {
-                        // if it's the first car in this direction, set flag and GOO
-                        Main.differentIds.set(this.startDirection, Main.differentIds.get(this.startDirection) + 1);
-                        break;
+                synchronized (Main.differentIds) {
+                    while(true) {
+                        if (Main.differentIds.get(this.startDirection).equals(Main.intersection.getMaxCarsLane())) {
+                            try {
+                                Main.differentIds.wait();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            // if it's the first car in this direction, set flag and GOO
+                            Main.differentIds.set(this.startDirection, Main.differentIds.get(this.startDirection) + 1);
+                            break;
+                        }
+
                     }
                 }
 
@@ -145,20 +142,46 @@ public class Car implements Runnable {
                 System.out.println("Car " + id +
                         " has exited the roundabout after " +
                         Main.intersection.getTime()/1000  + " seconds");
-                Main.differentIds.set(this.startDirection, Main.differentIds.get(startDirection) - 1);
+                synchronized (Main.differentIds) {
+                    Main.differentIds.set(this.startDirection, Main.differentIds.get(startDirection) - 1);
+                    Main.differentIds.notifyAll();
+                }
 
                 break;
 
-            case("simple_max_x_car_roundabout"):
+            case("simple_max_x_car_roundabout"):  // not sure what to do! - also check the ReaderHandler!
+                System.out.println("Car " + this.id + " has reached the roundabout");
+                synchronized (Main.differentIds) {
+                    while(true) {
+                        if (Main.differentIds.get(this.startDirection) < (Main.intersection.getMaxCarsLane())) {
+                            try {
+                                Main.differentIds.wait();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            // if it's the first car in this direction, set flag and GOO
+                            Main.differentIds.set(this.startDirection, Main.differentIds.get(this.startDirection) + 1);
+                            break;
+                        }
 
+                    }
+                }
+
+                System.out.println("Car " + this.id + " has entered the roundabout from lane " + this.startDirection);
+
+                this.sleep();
+                System.out.println("Car " + id +
+                        " has exited the roundabout after " +
+                        Main.intersection.getTime()/1000  + " seconds");
+                synchronized (Main.differentIds) {
+                    Main.differentIds.set(this.startDirection, Main.differentIds.get(startDirection) - 1);
+                    Main.differentIds.notifyAll();
+                }
                 break;
 
             case("priority_intersection"):
                 // verific daca este vreo masina cu prioritate mai mare in intersectie
-                // ar trebui sa merg pe principiul producer/consumer
-                // consum intai toate masinile cu prioritati mai mari
-                // apoi pe cele cu prioritati mai mici
-
 
                 // if the car has high priority, increment contor(the car is in intersection) and traverse
                 if (this.priority > 1) {

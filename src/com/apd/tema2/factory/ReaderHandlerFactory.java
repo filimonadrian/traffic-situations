@@ -85,6 +85,8 @@ public class ReaderHandlerFactory {
 
                     Main.intersection.setMaxCars(Integer.parseInt(line[0]));
                     Main.intersection.setTime(Integer.parseInt(line[1]));
+                    Main.intersection.setMaxCarsLane(Integer.parseInt(line[2]));
+
                 }
             };
             case "priority_intersection" -> new ReaderHandler() {
@@ -92,7 +94,7 @@ public class ReaderHandlerFactory {
                 public void handle(final String handlerType, final BufferedReader br) throws IOException {
                     String[] line = br.readLine().split(" ");
 
-                    Main.intersection = IntersectionFactory.getIntersection("priority_intersection");                    Main.intersection.setName("simple_maintenance");
+                    Main.intersection = IntersectionFactory.getIntersection("priority_intersection");
                     Main.intersection.setName("priority_intersection");
 
                     Main.intersection.setHighPriorityCarsNo(Integer.parseInt(line[0]));
