@@ -15,14 +15,18 @@ public interface Intersection {
     void setPedestrianTime(Integer pedestrianTime);
     void setMaxPedestriansNo(Integer maxPedestriansNo);
     void setCarsPassNo(Integer carsPassNo);
+    void setLanesNo(Integer lanesNo);
 
-
+    String getName();
+    Integer getTime();
     Integer getMaxCars();
     Integer getMaxCarsLane();
-    Integer getTime();
-    String getName();
     Integer getHighPriorityCarsNo();
     Integer getLowPriorityCarsNo();
+    Integer getPedestrianTime();
+    Integer getMaxPedestriansNo();
+    Integer getCarsPassNo();
+    Integer getLanesNo();
 
 
 }

@@ -20,17 +20,19 @@ public class Main {
     public static Semaphore semaphore;
 
     public static List<Integer> differentIds;
-
+    public static List<Semaphore> semaphores;
     public static void main(String[] args) {
         Reader fileReader = Reader.getInstance(args[0]);
         Set<Thread> cars = fileReader.getCarsFromInput();
 
-        // barrier = new CyclicBarrier(intersection.getMaxCars());
         if (intersection.getMaxCars() != null) {
-            differentIds = new ArrayList<Integer>(Collections.nCopies(intersection.getMaxCars(), 0));
-            Car.differentIds = new ArrayList<Integer>(Collections.nCopies(intersection.getMaxCars(), 0));
+            // Car.differentIds = new ArrayList<Integer>(Collections.nCopies(intersection.getMaxCars(), 0));
             semaphore = new Semaphore(intersection.getMaxCars());
-
+        }
+        if (intersection.getLanesNo() != null) {
+            differentIds = new ArrayList<Integer>(Collections.nCopies(intersection.getLanesNo(), 0));
+            barrier = new CyclicBarrier(intersection.getMaxCars() * intersection.getLanesNo());
+            semaphores = new ArrayList<Semaphore>()
         }
 
         for(Thread car : cars) {

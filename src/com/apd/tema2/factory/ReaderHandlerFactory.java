@@ -58,7 +58,8 @@ public class ReaderHandlerFactory {
                     Main.intersection = IntersectionFactory.getIntersection("simple_strict_1_car_roundabout");
                     Main.intersection.setName("simple_strict_1_car_roundabout");
 
-                    Main.intersection.setMaxCars(Integer.parseInt(line[0]));
+                    Main.intersection.setMaxCars(1);
+                    Main.intersection.setLanesNo(Integer.parseInt(line[0]));
                     Main.intersection.setTime(Integer.parseInt(line[1]));
                 }
             };
@@ -70,9 +71,9 @@ public class ReaderHandlerFactory {
                     Main.intersection = IntersectionFactory.getIntersection("simple_strict_x_car_roundabout");
                     Main.intersection.setName("simple_strict_x_car_roundabout");
 
-                    Main.intersection.setMaxCars(Integer.parseInt(line[0]));
+                    Main.intersection.setLanesNo(Integer.parseInt(line[0]));
                     Main.intersection.setTime(Integer.parseInt(line[1]));
-                    Main.intersection.setMaxCarsLane(Integer.parseInt(line[2]));
+                    Main.intersection.setMaxCars(Integer.parseInt(line[2]));
                 }
             };
             case "simple_max_x_car_roundabout" -> new ReaderHandler() {
@@ -83,9 +84,9 @@ public class ReaderHandlerFactory {
                     Main.intersection = IntersectionFactory.getIntersection("simple_max_x_car_roundabout");
                     Main.intersection.setName("simple_max_x_car_roundabout");
 
-                    Main.intersection.setMaxCars(Integer.parseInt(line[0]));
+                    Main.intersection.setLanesNo(Integer.parseInt(line[0]));
                     Main.intersection.setTime(Integer.parseInt(line[1]));
-                    Main.intersection.setMaxCarsLane(Integer.parseInt(line[2]));
+                    Main.intersection.setMaxCars(Integer.parseInt(line[2]));
 
                 }
             };

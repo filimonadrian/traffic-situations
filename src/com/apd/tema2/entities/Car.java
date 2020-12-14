@@ -118,55 +118,57 @@ public class Car implements Runnable {
                 break;
 
             case("simple_strict_x_car_roundabout"):
-                System.out.println("Car " + this.id + " has reached the roundabout");
+                System.out.println("Car " + this.id + " has reached the roundabout, now waiting...");
                 synchronized (Main.differentIds) {
                     while(true) {
-                        if (Main.differentIds.get(this.startDirection).equals(Main.intersection.getMaxCarsLane())) {
+                        if (Main.differentIds.get(this.startDirection).equals(Main.intersection.getMaxCars())) {
                             try {
                                 Main.differentIds.wait();
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
                             }
                         } else {
-                            // if it's the first car in this direction, set flag and GOO
+                            System.out.println("Car " + this.id + " was selected to enter the roundabout from lane " + this.startDirection);
                             Main.differentIds.set(this.startDirection, Main.differentIds.get(this.startDirection) + 1);
                             break;
                         }
-
                     }
+                }
+
+                try {
+                    Main.barrier.await();
+                } catch (InterruptedException | BrokenBarrierException e) {
+                    e.printStackTrace();
                 }
 
                 System.out.println("Car " + this.id + " has entered the roundabout from lane " + this.startDirection);
 
+                try {
+                    Main.barrier.await();
+                } catch (InterruptedException | BrokenBarrierException e) {
+                    e.printStackTrace();
+                }
+
                 this.sleep();
+
                 System.out.println("Car " + id +
                         " has exited the roundabout after " +
                         Main.intersection.getTime()/1000  + " seconds");
+                try {
+                    Main.barrier.await();
+                } catch (InterruptedException | BrokenBarrierException e) {
+                    e.printStackTrace();
+                }
+
                 synchronized (Main.differentIds) {
-                    Main.differentIds.set(this.startDirection, Main.differentIds.get(startDirection) - 1);
-                    Main.differentIds.notifyAll();
+                    Main.differentIds.set(this.startDirection, 0);
+                    Main.differentIds.notify();
                 }
 
                 break;
 
             case("simple_max_x_car_roundabout"):  // not sure what to do! - also check the ReaderHandler!
-                System.out.println("Car " + this.id + " has reached the roundabout");
-                synchronized (Main.differentIds) {
-                    while(true) {
-                        if (Main.differentIds.get(this.startDirection) < (Main.intersection.getMaxCarsLane())) {
-                            try {
-                                Main.differentIds.wait();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            // if it's the first car in this direction, set flag and GOO
-                            Main.differentIds.set(this.startDirection, Main.differentIds.get(this.startDirection) + 1);
-                            break;
-                        }
-
-                    }
-                }
+                System.out.println("Car " + this.id + " has reached the roundabout from lane " + this.getStartDirection());
 
                 System.out.println("Car " + this.id + " has entered the roundabout from lane " + this.startDirection);
 
@@ -174,10 +176,6 @@ public class Car implements Runnable {
                 System.out.println("Car " + id +
                         " has exited the roundabout after " +
                         Main.intersection.getTime()/1000  + " seconds");
-                synchronized (Main.differentIds) {
-                    Main.differentIds.set(this.startDirection, Main.differentIds.get(startDirection) - 1);
-                    Main.differentIds.notifyAll();
-                }
                 break;
 
             case("priority_intersection"):

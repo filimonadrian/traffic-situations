@@ -4,7 +4,10 @@ import com.apd.tema2.entities.Intersection;
 
 public class Crosswalk implements Intersection {
     String name;
+    Integer time, maxCars, maxCarsLane;
+    Integer highPriorityCarsNo, lowPriorityCarsNo;
     Integer pedestrianTime, maxPedestriansNo;
+    Integer carsPassNo, lanesNo;
 
     @Override
     public String getName() {
@@ -16,6 +19,57 @@ public class Crosswalk implements Intersection {
         this.name = name;
     }
 
+    @Override
+    public Integer getTime() {
+        return time;
+    }
+
+    @Override
+    public void setTime(Integer time) {
+        this.time = time;
+    }
+
+    @Override
+    public Integer getMaxCars() {
+        return maxCars;
+    }
+
+    @Override
+    public void setMaxCars(Integer maxCars) {
+        this.maxCars = maxCars;
+    }
+
+    @Override
+    public Integer getMaxCarsLane() {
+        return maxCarsLane;
+    }
+
+    @Override
+    public void setMaxCarsLane(Integer maxCarsLane) {
+        this.maxCarsLane = maxCarsLane;
+    }
+
+    @Override
+    public Integer getHighPriorityCarsNo() {
+        return highPriorityCarsNo;
+    }
+
+    @Override
+    public void setHighPriorityCarsNo(Integer highPriorityCarsNo) {
+        this.highPriorityCarsNo = highPriorityCarsNo;
+    }
+
+    @Override
+    public Integer getLowPriorityCarsNo() {
+        return lowPriorityCarsNo;
+    }
+
+    @Override
+    public void setLowPriorityCarsNo(Integer lowPriorityCarsNo) {
+        this.lowPriorityCarsNo = lowPriorityCarsNo;
+    }
+
+    @Override
     public Integer getPedestrianTime() {
         return pedestrianTime;
     }
@@ -25,6 +79,7 @@ public class Crosswalk implements Intersection {
         this.pedestrianTime = pedestrianTime;
     }
 
+    @Override
     public Integer getMaxPedestriansNo() {
         return maxPedestriansNo;
     }
@@ -35,57 +90,22 @@ public class Crosswalk implements Intersection {
     }
 
     @Override
-    public void setTime(Integer time) {
-
-    }
-
-    @Override
-    public void setMaxCars(Integer maxCars) {
-
-    }
-
-    @Override
-    public void setMaxCarsLane(Integer maxCarsLane) {
-
-    }
-
-    @Override
-    public void setHighPriorityCarsNo(Integer highPriorityCarsNo) {
-
-    }
-
-    @Override
-    public void setLowPriorityCarsNo(Integer lowPriorityCarsNo) {
-
+    public Integer getCarsPassNo() {
+        return carsPassNo;
     }
 
     @Override
     public void setCarsPassNo(Integer carsPassNo) {
-
+        this.carsPassNo = carsPassNo;
     }
 
     @Override
-    public Integer getMaxCars() {
-        return null;
+    public Integer getLanesNo() {
+        return lanesNo;
     }
 
     @Override
-    public Integer getMaxCarsLane() {
-        return null;
-    }
-
-    @Override
-    public Integer getTime() {
-        return null;
-    }
-
-    @Override
-    public Integer getHighPriorityCarsNo() {
-        return null;
-    }
-
-    @Override
-    public Integer getLowPriorityCarsNo() {
-        return null;
+    public void setLanesNo(Integer lanesNo) {
+        this.lanesNo = lanesNo;
     }
 }
