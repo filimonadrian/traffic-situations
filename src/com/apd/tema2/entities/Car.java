@@ -87,34 +87,32 @@ public class Car implements Runnable {
 
             case("simple_strict_1_car_roundabout"):
                 System.out.println("Car " + this.id + " has reached the roundabout");
-//                synchronized (System.out) {
-//                    while(true) {
-//                        if (differentIds.get(this.startDirection) == 1) {
-//                            try {
-//                                this.wait();
-//                            } catch (InterruptedException e) {
-//                                e.printStackTrace();
-//                            }
-//                        } else {
-//                            // if it's the first car in this direction, set flag and GOO
-//                            differentIds.set(this.startDirection, 1);
-//
-//                            break;
-//                        }
-//
-//                    }
-//                    notifyAll();
-//                }
+                synchronized (Main.differentIds) {
+                    while(true) {
+                        if (Main.differentIds.get(this.startDirection) == 1) {
+                            try {
+                                Main.differentIds.wait();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            // if it's the first car in this direction, set flag and GOO
+                            Main.differentIds.set(this.startDirection, 1);
+                            break;
+                        }
 
-                while(true) {
-                    if (Main.differentIds.get(this.startDirection) == 1) {
-                        continue;
-                    } else {
-                        // if it's the first car in this direction, set flag and GOO
-                        Main.differentIds.set(this.startDirection, 1);
-                        break;
                     }
                 }
+
+//                while(true) {
+//                    if (Main.differentIds.get(this.startDirection) == 1) {
+//                        continue;
+//                    } else {
+//                        // if it's the first car in this direction, set flag and GOO
+//                        Main.differentIds.set(this.startDirection, 1);
+//                        break;
+//                    }
+//                }
 
                 System.out.println("Car " + this.id + " has entered the roundabout from lane " + this.startDirection);
 
@@ -122,7 +120,10 @@ public class Car implements Runnable {
                 System.out.println("Car " + id +
                         " has exited the roundabout after " +
                         Main.intersection.getTime()/1000  + " seconds");
-                Main.differentIds.set(this.startDirection, 0);
+                synchronized (Main.differentIds) {
+                    Main.differentIds.set(this.startDirection, 0);
+                    Main.differentIds.notifyAll();
+                }
 
                 break;
 
