@@ -109,6 +109,7 @@ public class ReaderHandlerFactory {
 
                     Main.intersection = IntersectionFactory.getIntersection("crosswalk");
                     Main.intersection.setName("crosswalk");
+
                     Main.intersection.setPedestrianTime(Integer.parseInt(line[0]));
                     Main.intersection.setMaxPedestriansNo(Integer.parseInt(line[1]));
                 }

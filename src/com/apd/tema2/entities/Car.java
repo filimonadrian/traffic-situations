@@ -1,6 +1,7 @@
 package com.apd.tema2.entities;
 
 import com.apd.tema2.Main;
+import com.apd.tema2.factory.CarFactory;
 import com.apd.tema2.strategy.Exercise1;
 import com.apd.tema2.strategy.ExerciseStrategy;
 
@@ -10,6 +11,7 @@ import java.util.TreeSet;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 
 import static java.lang.Thread.sleep;
 
@@ -225,6 +227,61 @@ public class Car implements Runnable {
                 break;
 
             case("crosswalk"):
+                // Masina trece pe un send in timp ce pietonii se strang
+
+                // masinile trec pe verde cat timp pietonii se strang
+                // dupa ce se strang pietonii, trebuie sa pun rosu(aici ar fi o bariera
+                // apoi, ar trebui sa pun din nou verde
+
+                // variabila hasChanged imi spune daca s-a modificat ceva in afisare
+
+                // true pentru verde, false pentru rosu
+                boolean hasChanged = true;
+                // last color 1 pentru green, 0 pentru red
+                int lastColor = 1;
+                Thread pedestrians = new Thread(new Pedestrians(Main.intersection.getPedestrianTime(), Main.intersection.getMaxPedestriansNo()));
+                pedestrians.start();
+                boolean color = true;
+
+                while (true) {
+
+                    // daca este verde la pietoni => rosu la masini
+                    if (Pedestrians.isGreen && lastColor == 1) {
+                        System.out.println("Car " + this.id + " has now red light");
+                        lastColor = 0;
+                    }
+                    // daca nu e verde la pietoni, e verde la masini
+                    if (!Pedestrians.isGreen && lastColor == 0) {
+                        System.out.println("Car " + this.id + " has now green light");
+                        lastColor = 1;
+                    }
+                    
+                }
+
+
+
+//                while (true) {
+//
+//                    if (hasChanged) {
+//                        // daca se schimba ceva, afiseaza alta culoare fata de cea afisata ultima data
+//                        if (color) {
+//                            System.out.println("Car " + this.id + " has now green light");
+//                        } else {
+//                            System.out.println("Car " + this.id + " has now red light");
+//                        }
+//                        color = !color;
+//                        hasChanged = false;
+//                    }
+//
+//                    synchronized (Main.crosswalkLock) {
+//                        try {
+//                            Main.crosswalkLock.wait();
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//
+//                }
 
                 break;
 

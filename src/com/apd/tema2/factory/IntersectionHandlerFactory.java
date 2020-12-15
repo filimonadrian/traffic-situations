@@ -78,6 +78,8 @@ public class IntersectionHandlerFactory {
                     } // NU MODIFICATI
 
                     // Continuati de aici
+
+
                 }
             };
             case "crosswalk" -> new IntersectionHandler() {

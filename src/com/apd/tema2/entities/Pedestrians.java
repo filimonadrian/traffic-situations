@@ -1,5 +1,6 @@
 package com.apd.tema2.entities;
 
+import com.apd.tema2.Main;
 import com.apd.tema2.utils.Constants;
 
 import static java.lang.Thread.sleep;
@@ -15,6 +16,8 @@ public class Pedestrians implements Runnable {
     private int executeTime;
     private long startTime;
 
+    public static Boolean isGreen = false;
+
     public Pedestrians(int executeTime, int maxPedestriansNo) {
         this.startTime = System.currentTimeMillis();
         this.executeTime = executeTime;
@@ -29,10 +32,24 @@ public class Pedestrians implements Runnable {
                 sleep(Constants.PEDESTRIAN_COUNTER_TIME);
 
                 if(pedestriansNo == maxPedestriansNo) {
+
+                    // pun isGreen pe true, masinile trebuie sa afiseze RED
+                    // apoi sa astepte pana se face din nou verde
+
+                    // trezesc masinile ca sa afiseze ROSU
+                    synchronized (Main.crosswalkLock) {
+                        Main.crosswalkLock.notifyAll();
+                    }
                     pedestriansNo = 0;
                     pass = true;
+                    isGreen = true;
                     sleep(Constants.PEDESTRIAN_PASSING_TIME);
+
                     pass = false;
+                    isGreen = false;
+                    synchronized (Main.crosswalkLock) {
+                        Main.crosswalkLock.notifyAll();
+                    }
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();

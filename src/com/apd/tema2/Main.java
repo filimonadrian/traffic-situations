@@ -24,6 +24,8 @@ public class Main {
     public static List<Semaphore> semaphores;
     public static AtomicInteger carsInIntersection = new AtomicInteger(0);
 
+    public static final Boolean crosswalkLock = true;
+
     public static void main(String[] args) {
         Reader fileReader = Reader.getInstance(args[0]);
         Set<Thread> cars = fileReader.getCarsFromInput();
