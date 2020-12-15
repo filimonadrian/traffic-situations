@@ -43,6 +43,12 @@ public class Main {
             queue = new LinkedBlockingQueue<>(intersection.getLowPriorityCarsNo());
         }
 
+        if (intersection.getName().equals("railroad")) {
+            queue = new LinkedBlockingQueue<>(Main.carsNo);
+            barrier = new CyclicBarrier(Main.carsNo);
+            semaphore = new Semaphore(1);
+        }
+
         if (intersection.getLanesNo() != null) {
             differentIds = new ArrayList<Integer>(Collections.nCopies(intersection.getLanesNo(), 0));
             barrier = new CyclicBarrier(intersection.getMaxCars() * intersection.getLanesNo());
