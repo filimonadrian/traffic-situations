@@ -204,10 +204,16 @@ public class IntersectionHandlerFactory {
 
                     // if the car has low priority, try to enter the intersection
                     else if (car.getPriority() == 1) {
-                        // TODO: add a semaphore !!!!!
+                        try {
+                            Main.singlePermitSemaphore.acquire();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
                         System.out.println("Car " + car.getId() + " with low priority is trying to enter the intersection...");
                         Main.queue.add(car.getId());
 
+                        Main.singlePermitSemaphore.release();
                         while (true) {
                             // if there is no priority car, traverse the intersection, KEEP THE ORDER
                             if (Main.carsInIntersection.get() == 0) {
@@ -304,7 +310,7 @@ public class IntersectionHandlerFactory {
                 public void handle(Car car) {
 
                     try {
-                        Main.semaphore.acquire();
+                        Main.singlePermitSemaphore.acquire();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -316,7 +322,7 @@ public class IntersectionHandlerFactory {
                                         " from side number " + car.getStartDirection() +
                                         " has stopped by the railroad");
 
-                    Main.semaphore.release();
+                    Main.singlePermitSemaphore.release();
 
                     try {
                         Main.barrier.await();

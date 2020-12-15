@@ -1,19 +1,7 @@
 package com.apd.tema2.entities;
 
 import com.apd.tema2.Main;
-import com.apd.tema2.factory.CarFactory;
-import com.apd.tema2.strategy.Exercise1;
-import com.apd.tema2.strategy.ExerciseStrategy;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeSet;
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CyclicBarrier;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Predicate;
-
 import static java.lang.Thread.sleep;
 
 /**
@@ -58,8 +46,6 @@ public class Car implements Runnable {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-
     }
 
     public int getId() {

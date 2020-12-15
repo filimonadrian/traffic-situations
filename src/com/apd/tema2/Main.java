@@ -18,6 +18,8 @@ public class Main {
     public static CyclicBarrier barrierStrictXCars;
     public static CyclicBarrier barrier;
     public static Semaphore semaphore;
+    public static Semaphore singlePermitSemaphore;
+
     public static BlockingQueue<Integer> queue;
 
     public static List<Integer> differentIds;
@@ -30,9 +32,19 @@ public class Main {
         Reader fileReader = Reader.getInstance(args[0]);
         Set<Thread> cars = fileReader.getCarsFromInput();
 
+        singlePermitSemaphore =  new Semaphore(1);
+
         if (intersection.getMaxCars() != null) {
-            // Car.differentIds = new ArrayList<Integer>(Collections.nCopies(intersection.getMaxCars(), 0));
             semaphore = new Semaphore(intersection.getMaxCars());
+        }
+
+        if (intersection.getLanesNo() != null) {
+            differentIds = new ArrayList<Integer>(Collections.nCopies(intersection.getLanesNo(), 0));
+            barrier = new CyclicBarrier(intersection.getMaxCars() * intersection.getLanesNo());
+            semaphores = new ArrayList<Semaphore>();
+            for (int i = 0; i < intersection.getLanesNo(); i++) {
+                semaphores.add(new Semaphore(intersection.getMaxCars()));
+            }
         }
 
         if (intersection.getName().equals("simple_strict_x_car_roundabout")) {
@@ -46,17 +58,8 @@ public class Main {
         if (intersection.getName().equals("railroad")) {
             queue = new LinkedBlockingQueue<>(Main.carsNo);
             barrier = new CyclicBarrier(Main.carsNo);
-            semaphore = new Semaphore(1);
         }
 
-        if (intersection.getLanesNo() != null) {
-            differentIds = new ArrayList<Integer>(Collections.nCopies(intersection.getLanesNo(), 0));
-            barrier = new CyclicBarrier(intersection.getMaxCars() * intersection.getLanesNo());
-            semaphores = new ArrayList<Semaphore>();
-            for (int i = 0; i < intersection.getLanesNo(); i++) {
-                semaphores.add(new Semaphore(intersection.getMaxCars()));
-            }
-        }
 
         for(Thread car : cars) {
             car.start();
