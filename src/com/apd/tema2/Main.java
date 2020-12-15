@@ -17,6 +17,7 @@ public class Main {
     public static Pedestrians pedestrians = null;
     public static Intersection intersection;
     public static int carsNo;
+    public static CyclicBarrier barrierStrictXCars;
     public static CyclicBarrier barrier;
     public static Semaphore semaphore;
 
@@ -32,8 +33,13 @@ public class Main {
 
         if (intersection.getMaxCars() != null) {
             // Car.differentIds = new ArrayList<Integer>(Collections.nCopies(intersection.getMaxCars(), 0));
-            semaphore = new Semaphore(intersection.getMaxCars() * intersection.getLanesNo());
+            semaphore = new Semaphore(intersection.getMaxCars());
         }
+
+        if (intersection.getName().equals("simple_strict_x_car_roundabout")) {
+            barrierStrictXCars = new CyclicBarrier(intersection.getMaxCars() * intersection.getLanesNo());
+        }
+
         if (intersection.getLanesNo() != null) {
             differentIds = new ArrayList<Integer>(Collections.nCopies(intersection.getLanesNo(), 0));
             barrier = new CyclicBarrier(intersection.getMaxCars() * intersection.getLanesNo());

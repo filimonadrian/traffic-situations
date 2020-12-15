@@ -130,81 +130,45 @@ public class Car implements Runnable {
 
                 System.out.println("Car " + this.id + " was selected to enter the roundabout from lane " + this.startDirection);
 
+                try {
+                    Main.barrierStrictXCars.await();
+                } catch (InterruptedException | BrokenBarrierException e) {
+                    e.printStackTrace();
+                }
+
                 System.out.println("Car " + this.id + " has entered the roundabout from lane " + this.startDirection);
                 this.sleep();
+
+                try {
+                    Main.barrierStrictXCars.await();
+                } catch (InterruptedException | BrokenBarrierException e) {
+                    e.printStackTrace();
+                }
 
                 System.out.println("Car " + id +
                                     " has exited the roundabout after " +
                                     Main.intersection.getTime()/1000  + " seconds");
+                try {
+                    Main.barrierStrictXCars.await();
+                } catch (InterruptedException | BrokenBarrierException e) {
+                    e.printStackTrace();
+                }
 
                 Main.semaphores.get(this.startDirection).release();
-
-//                synchronized (Main.differentIds) {
-//                    while(true) {
-//                        if (Main.differentIds.get(this.startDirection).equals(Main.intersection.getMaxCars())) {
-//                            try {
-//                                Main.differentIds.wait();
-//                            } catch (InterruptedException e) {
-//                                e.printStackTrace();
-//                            }
-//                        } else {
-//                            System.out.println("Car " + this.id + " was selected to enter the roundabout from lane " + this.startDirection);
-//                            Main.differentIds.set(this.startDirection, Main.differentIds.get(this.startDirection) + 1);
-//                            break;
-//                        }
-//                    }
-//                }
-//
-//                try {
-//                    Main.barrier.await();
-//                } catch (InterruptedException | BrokenBarrierException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                System.out.println("Car " + this.id + " has entered the roundabout from lane " + this.startDirection);
-//
-//                this.sleep();
-//
-//                try {
-//                    Main.barrier.await();
-//                } catch (InterruptedException | BrokenBarrierException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                System.out.println("Car " + id +
-//                        " has exited the roundabout after " +
-//                        Main.intersection.getTime()/1000  + " seconds");
-//                try {
-//                    Main.barrier.await();
-//                } catch (InterruptedException | BrokenBarrierException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                synchronized (Main.differentIds) {
-//                    Main.differentIds.set(this.startDirection, 0);
-//                    Main.differentIds.notifyAll();
-//                }
 
                 break;
 
             case("simple_max_x_car_roundabout"):
                 System.out.println("Car " + this.id + " has reached the roundabout from lane " + this.getStartDirection());
-                synchronized (Main.differentIds) {
-                    while(true) {
-                        if (Main.differentIds.get(this.startDirection) >= (Main.intersection.getMaxCars())) {
-                            try {
-                                Main.differentIds.wait();
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            Main.differentIds.set(this.startDirection, Main.differentIds.get(this.startDirection) + 1);
-                            break;
-                        }
-                    }
+
+                try {
+                    Main.semaphores.get(this.startDirection).acquire();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
 
                 System.out.println("Car " + this.id + " has entered the roundabout from lane " + this.startDirection);
+
 
                 try {
                     Thread.sleep(Main.intersection.getTime());
@@ -212,13 +176,11 @@ public class Car implements Runnable {
                     e.printStackTrace();
                 }
 
-                synchronized (Main.differentIds) {
-                    Main.differentIds.set(this.startDirection, Main.differentIds.get(this.startDirection) - 1);
-                    Main.differentIds.notifyAll();
-                }
                 System.out.println("Car " + id +
                         " has exited the roundabout after " +
                         Main.intersection.getTime()/1000  + " seconds");
+
+                Main.semaphores.get(this.startDirection).release();
                 break;
 
             case("priority_intersection"):
@@ -227,11 +189,8 @@ public class Car implements Runnable {
                 if (this.priority > 1) {
                     Main.carsInIntersection.incrementAndGet();
                     System.out.println("Car " + this.id + " with high priority has entered the intersection");
-                    try {
-                        Thread.sleep(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+
+                    this.sleep();
                     System.out.println("Car " + this.id + " with high priority has exited the intersection");
                     Main.carsInIntersection.decrementAndGet();
                 }
@@ -345,10 +304,12 @@ public class Car implements Runnable {
     }
 
     public void sleep() {
-        try {
-            Thread.sleep(Main.intersection.getTime());
-        } catch (InterruptedException ex) {
-            System.out.println(ex.getStackTrace());
+        if (Main.intersection.getTime() != null) {
+            try {
+                Thread.sleep(Main.intersection.getTime());
+            } catch (InterruptedException ex) {
+                System.out.println(ex.getStackTrace());
+            }
         }
     }
 }
