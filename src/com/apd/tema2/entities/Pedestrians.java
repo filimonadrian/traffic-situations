@@ -17,6 +17,7 @@ public class Pedestrians implements Runnable {
     private long startTime;
 
     public static Boolean isGreen = false;
+    public static Boolean isFinished = false;
 
     public Pedestrians(int executeTime, int maxPedestriansNo) {
         this.startTime = System.currentTimeMillis();
@@ -57,6 +58,7 @@ public class Pedestrians implements Runnable {
         }
 
         finished = true;
+        isFinished = true;
     }
 
     public boolean isPass() {

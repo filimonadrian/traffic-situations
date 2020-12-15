@@ -32,13 +32,13 @@ public class Main {
 
         if (intersection.getMaxCars() != null) {
             // Car.differentIds = new ArrayList<Integer>(Collections.nCopies(intersection.getMaxCars(), 0));
-            semaphore = new Semaphore(intersection.getMaxCars());
+            semaphore = new Semaphore(intersection.getMaxCars() * intersection.getLanesNo());
         }
         if (intersection.getLanesNo() != null) {
             differentIds = new ArrayList<Integer>(Collections.nCopies(intersection.getLanesNo(), 0));
             barrier = new CyclicBarrier(intersection.getMaxCars() * intersection.getLanesNo());
             semaphores = new ArrayList<Semaphore>();
-            for (int i = 0; i < intersection.getMaxCars(); i++) {
+            for (int i = 0; i < intersection.getLanesNo(); i++) {
                 semaphores.add(new Semaphore(intersection.getMaxCars()));
             }
         }

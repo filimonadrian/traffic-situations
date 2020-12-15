@@ -9,10 +9,10 @@ ERR=./err
 OUT=./out
 
 echo -e "Show CPU info (lscpu)\n\n"
-lscpu
+#lscpu
 
 echo -e "\n\nShow memory info (free -m)\n\n"
-free -m
+#free -m
 echo -e "\n\n"
 
 echo -e "Unzip tests and student solution\n\n"
@@ -55,13 +55,13 @@ if [ -d "$ROOT" ]; then
                	if [[ -s $f ]]
 		then
 			echo "Contents of the err file $f"
-			cat $f
+			#cat $f
 
 			fullpath=`echo "${f%.*}"`
                         filename="${fullpath##*/}"
 
-			echo "Contents of the out file $filename.out"
-			head --lines=10 $OUT/$filename.out
+			#echo "Contents of the out file $filename.out"
+			#head --lines=10 $OUT/$filename.out
 		fi
 	done
 
