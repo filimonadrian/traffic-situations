@@ -2,7 +2,9 @@
 
 echo "Start time: $(date)"
 
-FOLDERS=../tests/*
+# FOLDERS=../tests/*
+FOLDERS=../new_tests/*
+
 HW_PATH=com/apd/tema2/Main
 ROOT=./src
 ERR=./err
@@ -11,9 +13,9 @@ OUT=./out
 echo -e "Show CPU info (lscpu)\n\n"
 #lscpu
 
-echo -e "\n\nShow memory info (free -m)\n\n"
-#free -m
-echo -e "\n\n"
+# echo -e "\n\nShow memory info (free -m)\n\n"
+# free -m
+# echo -e "\n\n"
 
 echo -e "Unzip tests and student solution\n\n"
 
@@ -50,20 +52,20 @@ if [ -d "$ROOT" ]; then
 	cd ..
 	timeout 120 java -jar ./Tema2Checker_J8.jar
 
-	for f in $ERR/*
-        do
-               	if [[ -s $f ]]
-		then
-			echo "Contents of the err file $f"
-			#cat $f
+	# for f in $ERR/*
+  #       do
+  #              	if [[ -s $f ]]
+	# 	then
+	# 		echo "Contents of the err file $f"
+	# 		#cat $f
 
-			fullpath=`echo "${f%.*}"`
-                        filename="${fullpath##*/}"
+	# 		fullpath=`echo "${f%.*}"`
+  #                       filename="${fullpath##*/}"
 
-			#echo "Contents of the out file $filename.out"
-			#head --lines=10 $OUT/$filename.out
-		fi
-	done
+	# 		#echo "Contents of the out file $filename.out"
+	# 		#head --lines=10 $OUT/$filename.out
+	# 	fi
+	# done
 
 	echo "complex_1"
 	cat "out/complex_maintenance_1.out"

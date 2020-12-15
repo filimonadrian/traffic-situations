@@ -190,19 +190,34 @@ public class Car implements Runnable {
                     Main.carsInIntersection.incrementAndGet();
                     System.out.println("Car " + this.id + " with high priority has entered the intersection");
 
-                    this.sleep();
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     System.out.println("Car " + this.id + " with high priority has exited the intersection");
                     Main.carsInIntersection.decrementAndGet();
+//                    if (Main.carsInIntersection.get() == 0) {
+//                        synchronized (Main.carsInIntersection) {
+//                            Main.carsInIntersection.notifyAll();
+//                        }
+//                    }
                 }
 
                 // if the car has low priority, try to enter the intersection
-                // if there is no priority car, traverse the intersection
-                 else if (this.priority == 1) {
+                else if (this.priority == 1) {
                     System.out.println("Car " + this.id + " with low priority is trying to enter the intersection...");
+                    Main.queue.add(this.id);
                     while (true) {
+                        // if there is no priority car, traverse the intersection, KEEP THE ORDER
                         if (Main.carsInIntersection.get() == 0) {
-                            System.out.println("Car " + this.id + " with low priority has entered the intersection");
-                            //System.out.println("Car " + this.id + " with low priority has exited the intersection");
+                            while (true) {
+                                if (Main.queue.element() == this.id) {
+                                    Main.queue.poll();
+                                    System.out.println("Car " + this.id + " with low priority has entered the intersection");
+                                    break;
+                                }
+                            }
                             break;
                         }
                     }
