@@ -295,43 +295,44 @@ public class IntersectionHandlerFactory {
             };
             case "simple_maintenance" -> new IntersectionHandler() {
                 @Override
-                public void handle(Car car) {
-                    // citirea fisierului este principala
-                    // primesc toate masinile
-                    // apoi accept alternativ, cu semafor
-                    // pot sa fac un semafor pentru ambele benzi, dar sa primesc intai masinile de pe banda 1
+                public void handle(Car car){
 
                     // the car arrives at the bottleneck
                     System.out.println("Car " + car.getId() +
-                            " from side " + car.getStartDirection() +
+                            " from side number " + car.getStartDirection() +
                             " has reached the bottleneck");
 
-                    // in the bottleneck should enter just carsPassNo from every lane
-                    // if the car is on lane 0 and there's no other cars in it
-                    if (car.getStartDirection() == 0 && Main.bool.get() == 0) {
+                    // if it's on the lane 0
+                    if (car.getStartDirection() == 0) {
+                        // acquire the semaphore
                         try {
                             Main.semaphoreZero.acquire();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        // number of cars from lane 0 which passed at this round
-                        System.out.println("Car " + car.getId() +
-                                " from side " + car.getStartDirection() +
-                                " has passed the bottleneck");
+                        while (true) {
+                            if (Main.bool.get() == 0) {
+                                // pass the intersection
+                                System.out.println("Car " + car.getId() +
+                                        " from side number " + car.getStartDirection() +
+                                        " has passed the bottleneck");
+                                break;
+                            }
+                        }
+                        // wait all cars --- be sure that all cars from lane 0 passed
 
-                        Main.priorityCarsPassed.incrementAndGet();
-                        // wait all cars to pass the bottleneck
                         try {
                             Main.barrierSimpleMaintenance.await();
                         } catch (InterruptedException | BrokenBarrierException e) {
                             e.printStackTrace();
                         }
-                        // set this flag on 1 (all priority cars passed)
-                        Main.bool.set(1);
-                        Main.semaphoreZero.release();
+                        synchronized (Main.bool) {
+                            Main.bool.notifyAll();
+                            Main.bool.set(1);
+                        }
                     }
 
-                    // if the car is on the lane 1
+                    // if it's on the lane 1
                     if (car.getStartDirection() == 1) {
                         // acquire the semaphore
                         try {
@@ -339,34 +340,108 @@ public class IntersectionHandlerFactory {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        // check if carsPassNo cars from lane 0 have passed
-                        while (true) {
-                            if (Main.priorityCarsPassed.get() == Main.intersection.getCarsPassNo()) {
+                        // IF ALL CARS FROM LANE 0 PASSED THE INTERSECTION, I CAN PASS THE INTERSECTION
+                        synchronized (Main.bool) {
+                            while (true) {
+                                if (Main.bool.get() == 0) {
+                                    try {
+                                        Main.bool.wait();
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                // pass the intersection
                                 System.out.println("Car " + car.getId() +
-                                        " from side " + car.getStartDirection() +
+                                        " from side number " + car.getStartDirection() +
                                         " has passed the bottleneck");
-//                                Main.semaphoreOne.release();
                                 break;
                             }
+
                         }
 
+                        // wait all cars --- be sure that all cars from lane 1 passed
                         try {
                             Main.barrierSimpleMaintenance.await();
                         } catch (InterruptedException | BrokenBarrierException e) {
                             e.printStackTrace();
                         }
-                        // after all cars from lane 0 passed, reset number of priority cars that passed
-                        // and set flag to 0 to permit them to start
-                        Main.priorityCarsPassed.set(0);
                         Main.bool.set(0);
-                        Main.semaphoreOne.release();
-
-                        try {
-                            Main.barrierSimpleMaintenance.await();
-                        } catch (InterruptedException | BrokenBarrierException e) {
-                            e.printStackTrace();
-                        }
                     }
+
+
+                    // after cars from both lanes passed, we can repeat all
+                    if (car.getStartDirection() == 0) {
+                        Main.semaphoreZero.release();
+                    } else {
+                        Main.semaphoreOne.release();
+                    }
+
+//                    // the car arrives at the bottleneck
+//                    System.out.println("Car " + car.getId() +
+//                            " from side " + car.getStartDirection() +
+//                            " has reached the bottleneck");
+//
+//                    // in the bottleneck should enter just carsPassNo from every lane
+//                    // if the car is on lane 0 and there's no other cars in it
+//                    if (car.getStartDirection() == 0 && Main.bool.get() == 0) {
+//                        try {
+//                            Main.semaphoreZero.acquire();
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                        // number of cars from lane 0 which passed at this round
+//                        System.out.println("Car " + car.getId() +
+//                                " from side " + car.getStartDirection() +
+//                                " has passed the bottleneck");
+//
+//                        Main.priorityCarsPassed.incrementAndGet();
+//                        // wait all cars to pass the bottleneck
+//                        try {
+//                            Main.barrierSimpleMaintenance.await();
+//                        } catch (InterruptedException | BrokenBarrierException e) {
+//                            e.printStackTrace();
+//                        }
+//                        // set this flag on 1 (all priority cars passed)
+//                        Main.bool.set(1);
+//                        Main.semaphoreZero.release();
+//                    }
+//
+//                    // if the car is on the lane 1
+//                    if (car.getStartDirection() == 1) {
+//                        // acquire the semaphore
+//                        try {
+//                            Main.semaphoreOne.acquire();
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
+//                        // check if carsPassNo cars from lane 0 have passed
+//                        while (true) {
+//                            if (Main.priorityCarsPassed.get() == Main.intersection.getCarsPassNo()) {
+//                                System.out.println("Car " + car.getId() +
+//                                        " from side " + car.getStartDirection() +
+//                                        " has passed the bottleneck");
+////                                Main.semaphoreOne.release();
+//                                break;
+//                            }
+//                        }
+//
+//                        try {
+//                            Main.barrierSimpleMaintenance.await();
+//                        } catch (InterruptedException | BrokenBarrierException e) {
+//                            e.printStackTrace();
+//                        }
+//                        // after all cars from lane 0 passed, reset number of priority cars that passed
+//                        // and set flag to 0 to permit them to start
+//                        Main.priorityCarsPassed.set(0);
+//                        Main.bool.set(0);
+//                        Main.semaphoreOne.release();
+//
+//                        try {
+//                            Main.barrierSimpleMaintenance.await();
+//                        } catch (InterruptedException | BrokenBarrierException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
 
                 }
             };
