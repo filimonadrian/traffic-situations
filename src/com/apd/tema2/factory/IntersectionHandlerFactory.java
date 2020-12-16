@@ -69,6 +69,7 @@ public class IntersectionHandlerFactory {
                     System.out.println("Car " + car.getId() + " has reached the roundabout");
                     synchronized (Main.differentIds) {
                         while(true) {
+                            // if a car on this lane is already in the roundabout ==> wait
                             if (Main.differentIds.get(car.getStartDirection()) == 1) {
                                 try {
                                     Main.differentIds.wait();
@@ -76,7 +77,7 @@ public class IntersectionHandlerFactory {
                                     e.printStackTrace();
                                 }
                             } else {
-                                // if it's the first car in this direction, set flag and GOO
+                                // if it's the first car in this direction, set flag and enter the intersection
                                 Main.differentIds.set(car.getStartDirection(), 1);
                                 break;
                             }
@@ -101,12 +102,19 @@ public class IntersectionHandlerFactory {
                     System.out.println("Car " + car.getId() + " has reached the roundabout, now waiting...");
 
                     try {
+                        Main.barrierStrictXCars.await();
+                    } catch (InterruptedException | BrokenBarrierException e) {
+                        e.printStackTrace();
+                    }
+
+                    try {
                         Main.semaphores.get(car.getStartDirection()).acquire();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
 
-                    System.out.println("Car " + car.getId() + " was selected to enter the roundabout from lane " + car.getStartDirection());
+                    System.out.println("Car " + car.getId() +
+                            " was selected to enter the roundabout from lane " + car.getStartDirection());
 
                     try {
                         Main.barrierStrictXCars.await();
@@ -114,7 +122,8 @@ public class IntersectionHandlerFactory {
                         e.printStackTrace();
                     }
 
-                    System.out.println("Car " + car.getId() + " has entered the roundabout from lane " + car.getStartDirection());
+                    System.out.println("Car " + car.getId() +
+                            " has entered the roundabout from lane " + car.getStartDirection());
                     car.sleep();
 
                     try {
@@ -146,9 +155,8 @@ public class IntersectionHandlerFactory {
                         e.printStackTrace();
                     } // NU MODIFICATI
 
-                    // Continuati de aici
-
-                    System.out.println("Car " + car.getId() + " has reached the roundabout from lane " + car.getStartDirection());
+                    System.out.println("Car " + car.getId() +
+                            " has reached the roundabout from lane " + car.getStartDirection());
 
                     try {
                         Main.semaphores.get(car.getStartDirection()).acquire();
@@ -156,8 +164,8 @@ public class IntersectionHandlerFactory {
                         e.printStackTrace();
                     }
 
-                    System.out.println("Car " + car.getId() + " has entered the roundabout from lane " + car.getStartDirection());
-
+                    System.out.println("Car " + car.getId() +
+                            " has entered the roundabout from lane " + car.getStartDirection());
 
                     try {
                         Thread.sleep(Main.intersection.getTime());
@@ -183,7 +191,7 @@ public class IntersectionHandlerFactory {
                         e.printStackTrace();
                     } // NU MODIFICATI
 
-                    // if the car has high priority, increment contor(the car is in intersection) and traverse
+                    // if the car has high priority, increment counter (the car is in intersection) and traverse
                     if (car.getPriority() > 1) {
                         Main.carsInIntersection.incrementAndGet();
                         System.out.println("Car " + car.getId()+ " with high priority has entered the intersection");
@@ -205,7 +213,8 @@ public class IntersectionHandlerFactory {
                             e.printStackTrace();
                         }
 
-                        System.out.println("Car " + car.getId() + " with low priority is trying to enter the intersection...");
+                        System.out.println("Car " + car.getId() +
+                                " with low priority is trying to enter the intersection...");
                         Main.queue.add(car.getId());
 
                         Main.singlePermitSemaphore.release();
@@ -215,7 +224,8 @@ public class IntersectionHandlerFactory {
                                 while (true) {
                                     if (Main.queue.element() == car.getId()) {
                                         Main.queue.poll();
-                                        System.out.println("Car " + car.getId() + " with low priority has entered the intersection");
+                                        System.out.println("Car " + car.getId() +
+                                                " with low priority has entered the intersection");
                                         break;
                                     }
                                 }
@@ -252,6 +262,9 @@ public class IntersectionHandlerFactory {
             case "simple_maintenance" -> new IntersectionHandler() {
                 @Override
                 public void handle(Car car){
+
+                    // flag to check if all cars from a lane has passed
+                    Main.bool.set(0);
 
                     // the car arrives at the bottleneck
                     System.out.println("Car " + car.getId() +

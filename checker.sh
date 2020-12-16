@@ -2,22 +2,22 @@
 
 echo "Start time: $(date)"
 
-# FOLDERS=../tests/*
-FOLDERS=../new_tests/*
+FOLDERS=../tests/*
+# FOLDERS=../new_tests/*
 
 HW_PATH=com/apd/tema2/Main
 ROOT=./src
 ERR=./err
 OUT=./out
 
-echo -e "Show CPU info (lscpu)\n\n"
+# echo -e "Show CPU info (lscpu)\n\n"
 #lscpu
 
 # echo -e "\n\nShow memory info (free -m)\n\n"
 # free -m
 # echo -e "\n\n"
 
-echo -e "Unzip tests and student solution\n\n"
+# echo -e "Unzip tests and student solution\n\n"
 
 unzip artifact.zip
 unzip archive.zip
