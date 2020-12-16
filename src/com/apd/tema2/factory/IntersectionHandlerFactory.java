@@ -195,11 +195,6 @@ public class IntersectionHandlerFactory {
                         }
                         System.out.println("Car " + car.getId() + " with high priority has exited the intersection");
                         Main.carsInIntersection.decrementAndGet();
-//                    if (Main.carsInIntersection.get() == 0) {
-//                        synchronized (Main.carsInIntersection) {
-//                            Main.carsInIntersection.notifyAll();
-//                        }
-//                    }
                     }
 
                     // if the car has low priority, try to enter the intersection
@@ -233,64 +228,25 @@ public class IntersectionHandlerFactory {
             case "crosswalk" -> new IntersectionHandler() {
                 @Override
                 public void handle(Car car) {
-                    // Masina trece pe un send in timp ce pietonii se strang
-//
-//                // masinile trec pe verde cat timp pietonii se strang
-//                // dupa ce se strang pietonii, trebuie sa pun rosu(aici ar fi o bariera
-//                // apoi, ar trebui sa pun din nou verde
-//
-//                // variabila hasChanged imi spune daca s-a modificat ceva in afisare
-//
-//                // true pentru verde, false pentru rosu
-                boolean hasChanged = true;
-                // last color 1 pentru green, 0 pentru red
-//                int lastColor = 1;
-//                Thread pedestrians = new Thread(new Pedestrians(Main.intersection.getPedestrianTime(), Main.intersection.getMaxPedestriansNo()));
-//                pedestrians.start();
-//                boolean color = true;
-//
-//                while (true) {
-//
-//                    // daca este verde la pietoni => rosu la masini
-//                    if (Pedestrians.isGreen && lastColor == 1) {
-//                        System.out.println("Car " + this.id + " has now red light");
-//                        lastColor = 0;
-//                    }
-//                    // daca nu e verde la pietoni, e verde la masini
-//                    if (!Pedestrians.isGreen && lastColor == 0) {
-//                        System.out.println("Car " + this.id + " has now green light");
-//                        lastColor = 1;
-//                    }
-//                    if (Pedestrians.isFinished) {
-//                        break;
-//                    }
-//                }
 
+                    // lastColor: 0 pentru green, 1 pentru red
+                    Main.lastColor.set(0);
 
+                    System.out.println("Car " + car.getId() + " has now green light");
 
-//                while (true) {
-//
-//                    if (hasChanged) {
-//                        // daca se schimba ceva, afiseaza alta culoare fata de cea afisata ultima data
-//                        if (color) {
-//                            System.out.println("Car " + this.id + " has now green light");
-//                        } else {
-//                            System.out.println("Car " + this.id + " has now red light");
-//                        }
-//                        color = !color;
-//                        hasChanged = false;
-//                    }
-//
-//                    synchronized (Main.crosswalkLock) {
-//                        try {
-//                            Main.crosswalkLock.wait();
-//                        } catch (InterruptedException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//
-//                }
+                    // the cars are going in the circle
+                    while (!Main.pedestrians.isFinished()) {
 
+                        // if the pedestrians have green color and the last printed color was green, print red
+                        if (Main.pedestrians.isPass() && Main.lastColor.get() == 0) {
+                            System.out.println("Car " + car.getId() + " has now red light");
+                            Main.lastColor.set(1);
+                            // if the cars have green and the last printed color was red, print green
+                        } else if (!Main.pedestrians.isPass() && Main.lastColor.get() == 1) {
+                            System.out.println("Car " + car.getId() + " has now green light");
+                            Main.lastColor.set(0);
+                        }
+                    }
                 }
             };
             case "simple_maintenance" -> new IntersectionHandler() {

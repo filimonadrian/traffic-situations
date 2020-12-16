@@ -29,7 +29,7 @@ public class Main {
     public static List<Integer> differentIds;
     public static List<Semaphore> semaphores;
     public static AtomicInteger carsInIntersection = new AtomicInteger(0);
-    public static AtomicInteger priorityCarsPassed = new AtomicInteger(0);
+    public static AtomicInteger lastColor = new AtomicInteger(0);
     public static AtomicInteger bool = new AtomicInteger(0);
 
 
@@ -75,6 +75,10 @@ public class Main {
             barrier = new CyclicBarrier(Main.carsNo);
         }
 
+        if (intersection.getName().equals("crosswalk")) {
+            pedestrians = new Pedestrians(Main.intersection.getPedestrianTime(),
+                    Main.intersection.getMaxPedestriansNo());
+        }
 
         for(Thread car : cars) {
             car.start();

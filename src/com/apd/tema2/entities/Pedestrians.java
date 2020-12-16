@@ -11,13 +11,11 @@ import static java.lang.Thread.sleep;
 public class Pedestrians implements Runnable {
     private int pedestriansNo = 0;
     private int maxPedestriansNo;
-    private boolean pass = false;
-    private boolean finished = false;
+    private volatile boolean pass = false;
+    private volatile boolean finished = false;
     private int executeTime;
     private long startTime;
 
-    public static Boolean isGreen = false;
-    public static Boolean isFinished = false;
 
     public Pedestrians(int executeTime, int maxPedestriansNo) {
         this.startTime = System.currentTimeMillis();
@@ -34,23 +32,11 @@ public class Pedestrians implements Runnable {
 
                 if(pedestriansNo == maxPedestriansNo) {
 
-                    // pun isGreen pe true, masinile trebuie sa afiseze RED
-                    // apoi sa astepte pana se face din nou verde
-
-                    // trezesc masinile ca sa afiseze ROSU
-                    synchronized (Main.crosswalkLock) {
-                        Main.crosswalkLock.notifyAll();
-                    }
                     pedestriansNo = 0;
                     pass = true;
-                    isGreen = true;
                     sleep(Constants.PEDESTRIAN_PASSING_TIME);
 
                     pass = false;
-                    isGreen = false;
-                    synchronized (Main.crosswalkLock) {
-                        Main.crosswalkLock.notifyAll();
-                    }
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -58,7 +44,6 @@ public class Pedestrians implements Runnable {
         }
 
         finished = true;
-        isFinished = true;
     }
 
     public boolean isPass() {
