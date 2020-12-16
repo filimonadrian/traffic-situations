@@ -44,7 +44,7 @@ We need to implement traffic-situations in Java with threads.
 
 ### Problems
 
-- tests which fails: sometimes, test 3 fails
+- tests which fails: **sometimes**, test 3 fails
 - lines 13 are 14 are inverted
 - out file:
     ```
@@ -67,7 +67,13 @@ We need to implement traffic-situations in Java with threads.
   - if the pedestrians have red color(cars have green) and last printed message for cars was for `red light`, print `message for green light`
 - `finished` and `pass` varabiles from `Pedestrians.java` were not safe (becase they weere saved in cache)
   - I've completed with `volatile` atribute
-  
+
+### Problems
+
+- tests which fails: **sometimes**, test 4 fails
+- on the first change of the semaphore color -- red color
+- just 9 cars print that the semaphore is red
+- this happens **JUST** on the second run
 
 ## Exercise 8: simple_maintenance
 
@@ -98,4 +104,3 @@ We need to implement traffic-situations in Java with threads.
 - I've used a queue to keep the order of the cars and a barrier to simulate the train
 - after the train "passed", the car with `id 0` prints that the train has passed
 - extract from the queue cars and print the messages
-
