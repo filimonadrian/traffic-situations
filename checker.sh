@@ -2,8 +2,8 @@
 
 echo "Start time: $(date)"
 
-FOLDERS=../tests/*
-# FOLDERS=../new_tests/*
+# FOLDERS=../tests/*
+FOLDERS=../new_tests/*
 
 HW_PATH=com/apd/tema2/Main
 ROOT=./src

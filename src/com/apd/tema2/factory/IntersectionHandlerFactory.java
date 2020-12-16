@@ -296,7 +296,66 @@ public class IntersectionHandlerFactory {
             case "simple_maintenance" -> new IntersectionHandler() {
                 @Override
                 public void handle(Car car) {
-                    
+                    // citirea fisierului este principala
+                    // primesc toate masinile
+                    // apoi accept alternativ, cu semafor
+                    // pot sa fac un semafor pentru ambele benzi, dar sa primesc intai masinile de pe banda 1
+
+                    // the car arrives at the bottleneck
+                    System.out.println("Car " + car.getId() +
+                            " from side " + car.getStartDirection() +
+                            " has reached the bottleneck");
+
+                    // in the bottleneck should enter just carsPassNo from every lane
+                    if (car.getStartDirection() == 0 && Main.bool.get() == 0) {
+                        try {
+                            Main.semaphoreZero.acquire();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        Main.priorityCarsPassed.incrementAndGet();
+                        System.out.println("Car " + car.getId() +
+                                " from side " + car.getStartDirection() +
+                                " has passed the bottleneck");
+
+                        try {
+                            Main.barrierSimpleMaintenance.await();
+                        } catch (InterruptedException | BrokenBarrierException e) {
+                            e.printStackTrace();
+                        }
+                        Main.bool.set(1);
+
+                        Main.semaphoreZero.release();
+                    }
+
+                    // if the car is on the lane 1
+                    if (car.getStartDirection() == 1) {
+                        // acquire the semaphore
+                        try {
+                            Main.semaphoreOne.acquire();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        // check if carsPassNo cars from lane 0 have passed
+                        while (true) {
+                            if (Main.priorityCarsPassed.get() == Main.intersection.getCarsPassNo()) {
+                                System.out.println("Car " + car.getId() +
+                                        " from side " + car.getStartDirection() +
+                                        " has passed the bottleneck");
+                                Main.semaphoreOne.release();
+                                break;
+                            }
+                        }
+
+                        Main.priorityCarsPassed.set(0);
+                        Main.bool.set(1);
+                        try {
+                            Main.barrierSimpleMaintenance.await();
+                        } catch (InterruptedException | BrokenBarrierException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
                 }
             };
             case "complex_maintenance" -> new IntersectionHandler() {

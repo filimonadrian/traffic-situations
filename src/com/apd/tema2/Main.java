@@ -17,7 +17,11 @@ public class Main {
     public static int carsNo;
     public static CyclicBarrier barrierStrictXCars;
     public static CyclicBarrier barrier;
+    public static CyclicBarrier barrierSimpleMaintenance;
     public static Semaphore semaphore;
+    public static Semaphore semaphoreZero;
+    public static Semaphore semaphoreOne;
+
     public static Semaphore singlePermitSemaphore;
 
     public static BlockingQueue<Integer> queue;
@@ -25,6 +29,9 @@ public class Main {
     public static List<Integer> differentIds;
     public static List<Semaphore> semaphores;
     public static AtomicInteger carsInIntersection = new AtomicInteger(0);
+    public static AtomicInteger priorityCarsPassed = new AtomicInteger(0);
+    public static AtomicInteger bool = new AtomicInteger(0);
+
 
     public static final Boolean crosswalkLock = true;
 
@@ -58,6 +65,13 @@ public class Main {
         if (intersection.getName().equals("railroad")) {
             queue = new LinkedBlockingQueue<>(Main.carsNo);
             barrier = new CyclicBarrier(Main.carsNo);
+        }
+
+        if (intersection.getName().equals("simple_maintenance")) {
+            // semaphore for both lanes
+            semaphoreZero = new Semaphore(intersection.getCarsPassNo());
+            semaphoreOne = new Semaphore(intersection.getCarsPassNo());
+            barrierSimpleMaintenance = new CyclicBarrier(Main.intersection.getCarsPassNo());
         }
 
 
