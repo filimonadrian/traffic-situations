@@ -72,6 +72,7 @@ public class Main {
             semaphoreZero = new Semaphore(intersection.getCarsPassNo());
             semaphoreOne = new Semaphore(intersection.getCarsPassNo());
             barrierSimpleMaintenance = new CyclicBarrier(Main.intersection.getCarsPassNo());
+            barrier = new CyclicBarrier(Main.carsNo);
         }
 
 
